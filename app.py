@@ -11,7 +11,7 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 # Set your Spotify API credentials
 CLIENT_ID = 'e859674243c8458f8814372e0ca9672b'
 CLIENT_SECRET = '3edc0de852f64317b2142d6a6262696e'
-REDIRECT_URI = 'http://localhost:3000/callback'  # Ensure this matches your registered URI on the Spotify dashboard
+REDIRECT_URI = 'http://localhost:3000'  # Ensure this matches your registered URI on the Spotify dashboard
 SCOPE = 'user-library-modify playlist-modify-private'
 
 @app.route('/')
@@ -114,3 +114,4 @@ def create_spotify_client():
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
+
