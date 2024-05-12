@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Mood-based Music Recommender</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Mood Music</h1>
+    <form id="moodForm">
+        <label for="moods">Choose a mood:</label>
+        <select id="moods" name="moods" required>
+            <option value="">Select a mood</option>
+            <option value="happy">Happy</option>
+            <option value="sad">Sad</option>
+            <option value="angry">Angry</option>
+            <option value="relaxed">Relaxed</option>
+            <option value="energetic">Energetic</option>
+            <option value="euphoric">Euphoric</option>
+        </select>
+        <button type="submit">Get Recommendations</button>
+    </form>
+    <div id="recommendations"></div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

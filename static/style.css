@@ -1,0 +1,74 @@
+/* General body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Header styles */
+h1 {
+    color: #1db954; /* Spotify's brand color */
+    text-align: center;
+}
+
+/* Form styling */
+form {
+    background-color: white;
+    max-width: 600px; /* Increased width */
+    margin: 20px auto;
+    padding: 30px; /* Increased padding */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+label {
+    font-size: 16px;
+    color: #555;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Makes sure the padding doesn't affect the overall width */
+}
+
+button {
+    width: 100%;
+    background-color: #1db954;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #1a9341; /* A darker green for hover effect */
+}
+
+/* Styles for the recommendations display */
+#recommendations {
+    background-color: white;
+    max-width: 600px; /* Increased width */
+    margin: 20px auto;
+    padding: 30px; /* Increased padding */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+#recommendations div {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#recommendations div:last-child {
+    border-bottom: none;
+}
