@@ -58,7 +58,7 @@ def get_recommendations():
         return jsonify({'error': 'Authentication required', 'login_required': True}), 401
 
     try:
-        results = sp.recommendations(seed_genres=genres, limit=10)
+        results = sp.recommendations(seed_genres=genres, limit=30)
         tracks = [{
             'track': track['name'],
             'artist': track['artists'][0]['name'],
@@ -94,7 +94,7 @@ def create_playlist():
             return jsonify({'error': 'Invalid mood'}), 400
         
         # Get track recommendations based on the genre
-        results = sp.recommendations(seed_genres=[genre], limit=10)
+        results = sp.recommendations(seed_genres=[genre], limit=30)
         track_uris = [track['uri'] for track in results['tracks']]
         
         # Create a new playlist and add tracks
