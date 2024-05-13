@@ -20,6 +20,15 @@ document.getElementById('moodForm').onsubmit = function(event) {
                 recommendationsDiv.innerHTML = `<p>Error: ${data.error}</p>`;
                 return;
             }
+
+            // Add a button to save the playlist
+            const savePlaylistButton = document.createElement('button');
+            savePlaylistButton.textContent = 'Save as Playlist';
+            savePlaylistButton.onclick = function() {
+                savePlaylist(moods, data);
+            };
+            recommendationsDiv.appendChild(savePlaylistButton);
+
             data.forEach(track => {
                 const trackDiv = document.createElement('div');
                 trackDiv.innerHTML = `Track: ${track.track} - Artist: ${track.artist} - Album: ${track.album} - <a href="${track.link}" target="_blank">Listen on Spotify</a>`;
@@ -31,3 +40,22 @@ document.getElementById('moodForm').onsubmit = function(event) {
             document.getElementById('recommendations').innerHTML = `<p>An error occurred while fetching recommendations.</p>`;
         });
 };
+
+function savePlaylist(mood, tracks) {
+    const trackUris = tracks.map(track => track.uri);
+    fetch(`/create_playlist?mood=${mood}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ tracks: trackUris })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to save playlist.');
+    });
+}
