@@ -11,7 +11,7 @@ Mood-based Recommendations: Users can select their current mood, and the applica
 Dynamic Playlist Creation: Allows users to create a Spotify playlist from the recommended tracks directly through the application.
 
 Responsive UI: Simple and responsive user interface for seamless interaction
-```
+
 # Technologies Used
 Frontend: HTML, CSS, JavaScript
 
