@@ -75,12 +75,37 @@ def get_recommendations():
 
 @app.route('/create_playlist', methods=['POST'])
 def create_playlist():
+    mood = request.args.get('mood')
+    if not mood:
+        return jsonify({'error': 'Mood parameter is missing'}), 400
+
+    # Fetch recommendations or get them from the session
     sp = create_spotify_client()
-    user_id = sp.current_user()['id']
-    playlist = sp.user_playlist_create(user_id, 'Mood Based Playlist', public=False)
-    track_uris = request.json['tracks']
-    sp.playlist_add_items(playlist['id'], track_uris)
-    return jsonify({'message': 'Playlist created successfully!', 'playlist_id': playlist['id']})
+    if sp is None:
+        return jsonify({'error': 'Authentication required', 'login_required': True}), 401
+    
+    try:
+        mood_genre_map = {
+            'happy': 'pop', 'sad': 'r-n-b', 'angry': 'metal',
+            'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
+        }
+        genre = mood_genre_map.get(mood)
+        if not genre:
+            return jsonify({'error': 'Invalid mood'}), 400
+        
+        # Get track recommendations based on the genre
+        results = sp.recommendations(seed_genres=[genre], limit=10)
+        track_uris = [track['uri'] for track in results['tracks']]
+        
+        # Create a new playlist and add tracks
+        user_id = sp.current_user()['id']
+        playlist = sp.user_playlist_create(user_id, f'{mood.title()} Mood Playlist', public=False)
+        sp.playlist_add_items(playlist['id'], track_uris)
+        
+        return jsonify({'message': 'Playlist created successfully!', 'playlist_id': playlist['id']})
+    except spotipy.SpotifyException as e:
+        return jsonify({'error': str(e)}), 500
+
 
 def create_spotify_oauth():
     return SpotifyOAuth(
