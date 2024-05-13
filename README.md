@@ -14,8 +14,11 @@ Responsive UI: Simple and responsive user interface for seamless interaction
 
 # Technologies Used
 Frontend: HTML, CSS, JavaScript
+
 Backend: Flask (Python)
+
 APIs: Spotify Web API
-Authentication: Spotify OAuth
+
+
 
 
