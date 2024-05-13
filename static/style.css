@@ -1,9 +1,9 @@
 /* General body styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5;
+    background-color: #e0dedecc;
     margin: 0;
-    padding: 20px;
+    padding: 50px;
     color: #333;
 }
 
@@ -16,9 +16,9 @@ h1 {
 /* Form styling */
 form {
     background-color: white;
-    max-width: 600px; /* Increased width */
-    margin: 20px auto;
-    padding: 30px; /* Increased padding */
+    max-width: 800px; /* Increased width */
+    margin: 40px auto;
+    padding: 80px; /* Increased padding */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
 }
@@ -31,7 +31,7 @@ label {
 select {
     width: 100%;
     padding: 10px;
-    margin-top: 8px;
+    margin-top: 15px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -57,7 +57,7 @@ button:hover {
 /* Styles for the recommendations display */
 #recommendations {
     background-color: white;
-    max-width: 600px; /* Increased width */
+    max-width: 700px; /* Increased width */
     margin: 20px auto;
     padding: 30px; /* Increased padding */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
