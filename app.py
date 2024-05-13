@@ -11,7 +11,7 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 # Set your Spotify API credentials
 CLIENT_ID = 'e859674243c8458f8814372e0ca9672b'
 CLIENT_SECRET = '3edc0de852f64317b2142d6a6262696e'
-REDIRECT_URI = 'http://localhost:3000'  # Ensure this matches your registered URI on the Spotify dashboard
+REDIRECT_URI = 'http://localhost:3000/callback'  # Ensure this matches your registered URI on the Spotify dashboard
 SCOPE = 'user-library-modify playlist-modify-private'
 
 @app.route('/')
@@ -95,12 +95,11 @@ def create_spotify_oauth():
 def create_spotify_client():
     token_info = session.get('token_info', None)
     if not token_info:
-        # Redirect to login if there is no token
         print("Token info not found in session, redirecting to login.")
-        return None  # Returning None to indicate that the client could not be created
+        return None
 
-    if spotipy.oauth2.is_token_expired(token_info):
-        sp_oauth = create_spotify_oauth()
+    sp_oauth = create_spotify_oauth()
+    if sp_oauth.is_token_expired(token_info):  # Corrected token expiration check
         try:
             token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
             session['token_info'] = token_info  # Update the session with the new token
@@ -114,4 +113,5 @@ def create_spotify_client():
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
+
 
