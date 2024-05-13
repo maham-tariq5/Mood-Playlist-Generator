@@ -22,5 +22,19 @@ APIs: Spotify Web API
 
 # Running the Application
 
+Start the Flask server: 
+
+```
+python3 server.py
+
+```
+Open a web browser and type in the following:
+
+```
+http://localhost:3000
+
+```
+
+
 
 
