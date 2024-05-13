@@ -1,7 +1,8 @@
 document.getElementById('moodForm').onsubmit = function(event) {
     event.preventDefault();
     var moods = document.getElementById('moods').value;
-    fetch(`/recommendations?moods=${moods}`)
+    var numSongs = document.getElementById('numSongs').value;  // Get the number of songs from the input field
+    fetch(`/recommendations?moods=${moods}&numSongs=${numSongs}`)  // Include numSongs in the request
         .then(response => {
             if (!response.ok) {
                 if (response.status === 401) {
@@ -25,7 +26,7 @@ document.getElementById('moodForm').onsubmit = function(event) {
             const savePlaylistButton = document.createElement('button');
             savePlaylistButton.textContent = 'Save as Playlist';
             savePlaylistButton.onclick = function() {
-                savePlaylist(moods, data);
+                savePlaylist(moods, data, numSongs);  // Pass numSongs to savePlaylist
             };
             recommendationsDiv.appendChild(savePlaylistButton);
 
@@ -41,9 +42,9 @@ document.getElementById('moodForm').onsubmit = function(event) {
         });
 };
 
-function savePlaylist(mood, tracks) {
+function savePlaylist(mood, tracks, numSongs) {
     const trackUris = tracks.map(track => track.uri);
-    fetch(`/create_playlist?mood=${mood}`, {
+    fetch(`/create_playlist?mood=${mood}&numSongs=${numSongs}`, {  // Include numSongs in the request
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
