@@ -1,9 +1,12 @@
 document.getElementById('moodForm').onsubmit = function(event) {
     event.preventDefault();
+    showSpinner(); // Show spinner when request starts
     var moods = document.getElementById('moods').value;
-    var numSongs = document.getElementById('numSongs').value;  // Get the number of songs from the input field
-    fetch(`/recommendations?moods=${moods}&numSongs=${numSongs}`)  // Include numSongs in the request
+    var numSongs = document.getElementById('numSongs').value;
+
+    fetch(`/recommendations?moods=${moods}&numSongs=${numSongs}`)
         .then(response => {
+            hideSpinner(); // Hide spinner when data is received
             if (!response.ok) {
                 if (response.status === 401) {
                     // Handle 401 Unauthorized response by redirecting to the login page
@@ -26,7 +29,7 @@ document.getElementById('moodForm').onsubmit = function(event) {
             const savePlaylistButton = document.createElement('button');
             savePlaylistButton.textContent = 'Save as Playlist';
             savePlaylistButton.onclick = function() {
-                savePlaylist(moods, data, numSongs);  // Pass numSongs to savePlaylist
+                savePlaylist(moods, data, numSongs);
             };
             recommendationsDiv.appendChild(savePlaylistButton);
 
@@ -37,14 +40,23 @@ document.getElementById('moodForm').onsubmit = function(event) {
             });
         })
         .catch(error => {
+            hideSpinner(); // Ensure spinner is hidden on error
             console.error('Error:', error);
             document.getElementById('recommendations').innerHTML = `<p>An error occurred while fetching recommendations.</p>`;
         });
 };
 
+function showSpinner() {
+    document.getElementById('loadingSpinner').hidden = false;
+}
+
+function hideSpinner() {
+    document.getElementById('loadingSpinner').hidden = true;
+}
+
 function savePlaylist(mood, tracks, numSongs) {
     const trackUris = tracks.map(track => track.uri);
-    fetch(`/create_playlist?mood=${mood}&numSongs=${numSongs}`, {  // Include numSongs in the request
+    fetch(`/create_playlist?mood=${mood}&numSongs=${numSongs}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
