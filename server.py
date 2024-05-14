@@ -34,75 +34,82 @@ def callback():
     return redirect(url_for('index', _external=True))
 
 @app.route('/recommendations', methods=['GET'])
-def get_recommendations():
+def recommendations():
     moods = request.args.get('moods', 'happy, sad, angry, relaxed, energetic, euphoric')
-    num_songs = int(request.args.get('numSongs', 10))  # Default to 10 if not specified
+    num_songs = int(request.args.get('numSongs', 10))
     if not moods:
         return jsonify({'error': 'No moods provided'}), 400
 
     mood_genre_map = {
-        'happy': 'pop',
-        'sad': 'r-n-b',
-        'angry': 'metal',
-        'relaxed': 'indie-pop',
-        'energetic': 'hip-hop',
-        'euphoric': 'electronic'
+        'happy': 'pop', 'sad': 'r-n-b', 'angry': 'metal',
+        'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
     }
 
-    genres = [mood_genre_map[mood.strip().lower()] for mood in moods.split(',') if mood.strip().lower() in mood_genre_map]
-    if not genres:
-        return jsonify({'error': 'Invalid moods'}), 400
+    genre = mood_genre_map.get(moods.strip().lower())
+    if not genre:
+        return jsonify({'error': 'Invalid mood'}), 400
 
     sp = create_spotify_client()
     if sp is None:
-        return jsonify({'error': 'Authentication required', 'login_required': True}), 401
+        return jsonify({'error': 'Authentication required'}), 401
 
-    try:
-        results = sp.recommendations(seed_genres=genres, limit=num_songs)  # Use num_songs here
-        tracks = [{
-            'track': track['name'],
-            'artist': track['artists'][0]['name'],
-            'album': track['album']['name'],
-            'link': track['external_urls']['spotify']
-        } for track in results['tracks']]
-        return jsonify(tracks)
-    except spotipy.exceptions.SpotifyException as e:
-        return jsonify({'error': str(e)}), 500
+    tracks, error = get_recommendations_by_genre(sp, genre, num_songs)
+    if error:
+        return jsonify({'error': error}), 500
 
+    track_info = [{
+        'track': track['name'],
+        'artist': track['artists'][0]['name'],
+        'album': track['album']['name'],
+        'link': track['external_urls']['spotify']
+    } for track in tracks]
+
+    return jsonify(track_info)
 
 
 
 @app.route('/create_playlist', methods=['POST'])
 def create_playlist():
     mood = request.args.get('mood')
-    num_songs = int(request.args.get('numSongs', 10))  # Ensure this is received properly
+    num_songs = int(request.args.get('numSongs', 10))
     if not mood:
         return jsonify({'error': 'Mood parameter is missing'}), 400
 
+    mood_genre_map = {
+        'happy': 'pop', 'sad': 'r-n-b', 'angry': 'metal',
+        'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
+    }
+
+    genre = mood_genre_map.get(mood)
+    if not genre:
+        return jsonify({'error': 'Invalid mood'}), 400
+
     sp = create_spotify_client()
     if sp is None:
-        return jsonify({'error': 'Authentication required', 'login_required': True}), 401
+        return jsonify({'error': 'Authentication required'}), 401
+
+    tracks, error = get_recommendations_by_genre(sp, genre, num_songs)
+    if error:
+        return jsonify({'error': error}), 500
+
+    track_uris = [track['uri'] for track in tracks]
 
     try:
-        mood_genre_map = {
-            'happy': 'pop', 'sad': 'r-n-b', 'angry': 'metal',
-            'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
-        }
-        genre = mood_genre_map.get(mood)
-        if not genre:
-            return jsonify({'error': 'Invalid mood'}), 400
-
-        results = sp.recommendations(seed_genres=[genre], limit=num_songs)  # Use num_songs here
-        track_uris = [track['uri'] for track in results['tracks']]
-
         user_id = sp.current_user()['id']
         playlist = sp.user_playlist_create(user_id, f'{mood.title()} Mood Playlist', public=False)
         sp.playlist_add_items(playlist['id'], track_uris)
-
         return jsonify({'message': 'Playlist created successfully!', 'playlist_id': playlist['id']})
     except spotipy.exceptions.SpotifyException as e:
         return jsonify({'error': str(e)}), 500
 
+
+# helper
+def get_recommendations_by_genre(sp, genre, num_songs):
+    try:
+        results = sp.recommendations(seed_genres=[genre], limit=num_songs)
+        return [track for track in results['tracks']], None
+    except spotipy.exceptions.SpotifyException as e:
+        return None, str(e)
 
 
 def create_spotify_oauth():
