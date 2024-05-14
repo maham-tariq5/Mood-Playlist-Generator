@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Recommender</title>
+    <title>MPG</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Mood Playlist Generator </h1>
+    <h1>Mood Playlist Generator</h1>
     <form id="moodForm">
         <label for="moods">Choose a mood:</label>
         <select id="moods" name="moods" required>
@@ -19,9 +19,13 @@
             <option value="energetic">Energetic</option>
             <option value="euphoric">Euphoric</option>
         </select>
+        <label for="numSongs">Number of songs:</label>
+        <input type="number" id="numSongs" name="numSongs" value="10" min="1" max="50" required>
         <button type="submit">Get Recommendations</button>
     </form>
-    <div id="notifications" style="color: red;"></div> <!-- Notification area for messages -->
+    <!-- Loading spinner positioned below the form -->
+    <div id="loadingSpinner" class="spinner" hidden></div>
+    <div id="notifications" style="color: red;"></div> 
     <div id="recommendations"></div>
 
     <script src="/static/script.js"></script>
