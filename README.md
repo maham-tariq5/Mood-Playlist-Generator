@@ -6,7 +6,7 @@ This Full-stack web application allows users to receive personalized Spotify mus
 
 User Authentication: Leverages Spotify's OAuth for user authentication to access personal account details and permissions.
 
-Mood-based Recommendations: Users can select their current mood, and the application fetches songs that match the mood from Spotify.
+Mood-based Recommendations: Users can select their current mood from pre-defined options, and the application fetches songs that match the mood from Spotify.
 
 Dynamic Playlist Creation: Allows users to create a Spotify playlist from the recommended tracks directly through the application.
 
