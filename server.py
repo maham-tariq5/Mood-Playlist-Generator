@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request, redirect, session, url_for, render_te
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-
 app = Flask(__name__)
 app.secret_key = 'SOME_SECRET_KEY'
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -11,7 +10,7 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 # Set your Spotify API credentials
 CLIENT_ID = 'e859674243c8458f8814372e0ca9672b'
 CLIENT_SECRET = '3edc0de852f64317b2142d6a6262696e'
-REDIRECT_URI = 'http://localhost:3000/callback'  # Ensure this matches your registered URI on the Spotify dashboard
+REDIRECT_URI = 'http://localhost:3000/callback'
 SCOPE = 'user-library-modify playlist-modify-private'
 
 @app.route('/')
@@ -61,38 +60,28 @@ def recommendations():
         'track': track['name'],
         'artist': track['artists'][0]['name'],
         'album': track['album']['name'],
-        'link': track['external_urls']['spotify']
+        'link': track['external_urls']['spotify'],
+        'uri': track['uri']
     } for track in tracks]
 
+    # Store only the URIs in the session to avoid large cookie size
+    session['recommended_track_uris'] = [track['uri'] for track in tracks]
     return jsonify(track_info)
-
-
 
 @app.route('/create_playlist', methods=['POST'])
 def create_playlist():
     mood = request.args.get('mood')
-    num_songs = int(request.args.get('numSongs', 10))
     if not mood:
         return jsonify({'error': 'Mood parameter is missing'}), 400
 
-    mood_genre_map = {
-        'happy': 'pop', 'sad': 'r-n-b', 'angry': 'metal',
-        'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
-    }
+    if 'recommended_track_uris' not in session or not session['recommended_track_uris']:
+        return jsonify({'error': 'No track URIs available for playlist creation'}), 400
 
-    genre = mood_genre_map.get(mood)
-    if not genre:
-        return jsonify({'error': 'Invalid mood'}), 400
+    track_uris = session['recommended_track_uris']
 
     sp = create_spotify_client()
     if sp is None:
         return jsonify({'error': 'Authentication required'}), 401
-
-    tracks, error = get_recommendations_by_genre(sp, genre, num_songs)
-    if error:
-        return jsonify({'error': error}), 500
-
-    track_uris = [track['uri'] for track in tracks]
 
     try:
         user_id = sp.current_user()['id']
@@ -102,21 +91,18 @@ def create_playlist():
     except spotipy.exceptions.SpotifyException as e:
         return jsonify({'error': str(e)}), 500
 
-
-# helper
 def get_recommendations_by_genre(sp, genre, num_songs):
     try:
         results = sp.recommendations(seed_genres=[genre], limit=num_songs)
-        return [track for track in results['tracks']], None
+        return results['tracks'], None
     except spotipy.exceptions.SpotifyException as e:
         return None, str(e)
-
 
 def create_spotify_oauth():
     return SpotifyOAuth(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
-        redirect_uri=REDIRECT_URI,  # Make sure the redirect URI exactly matches the one registered in your Spotify app settings
+        redirect_uri=REDIRECT_URI,
         scope=SCOPE,
         show_dialog=True,
         cache_path="token_info"
@@ -129,19 +115,15 @@ def create_spotify_client():
         return None
 
     sp_oauth = create_spotify_oauth()
-    if sp_oauth.is_token_expired(token_info):  # Corrected token expiration check
+    if sp_oauth.is_token_expired(token_info):
         try:
             token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-            session['token_info'] = token_info  # Update the session with the new token
+            session['token_info'] = token_info
         except spotipy.SpotifyException as e:
             print("Failed to refresh token:", str(e))
             return None
 
     return spotipy.Spotify(auth=token_info['access_token'])
 
-
-
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
-
-
