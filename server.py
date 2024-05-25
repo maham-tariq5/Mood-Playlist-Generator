@@ -7,7 +7,7 @@ app.secret_key = 'SOME_SECRET_KEY'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
-# Set your Spotify API credentials
+# Setting API credentials
 CLIENT_ID = 'e859674243c8458f8814372e0ca9672b'
 CLIENT_SECRET = '3edc0de852f64317b2142d6a6262696e'
 REDIRECT_URI = 'http://localhost:3000/callback'
@@ -15,16 +15,18 @@ SCOPE = 'user-library-modify playlist-modify-private'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html') # rendering home page
 
 @app.route('/login')
 def login():
-    sp_oauth = create_spotify_oauth()
+    # getting user to plug in spotify account credentials
+    sp_oauth = create_spotify_oauth() 
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
 
 @app.route('/callback')
 def callback():
+    # redirecting back to web page after authentication
     sp_oauth = create_spotify_oauth()
     session.clear()
     code = request.args.get('code')
