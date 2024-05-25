@@ -1,12 +1,18 @@
+
+// Handle the form submission for fetching recommendations
 document.getElementById('moodForm').onsubmit = function(event) {
     event.preventDefault();
     showSpinner(); // Show spinner when request starts
+    
+     // Get mood and number of songs from form inputs
     var moods = document.getElementById('moods').value;
     var numSongs = document.getElementById('numSongs').value;
 
+     // Fetch recommendations from the server
     fetch(`/recommendations?moods=${moods}&numSongs=${numSongs}`)
         .then(response => {
-            hideSpinner(); // Hide spinner when data is received
+            hideSpinner(); 
+            // Handle unauthorized response by redirecting to the login page
             if (!response.ok) {
                 if (response.status === 401) {
                     // Handle 401 Unauthorized response by redirecting to the login page
