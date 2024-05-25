@@ -83,3 +83,13 @@ button:hover {
 #recommendations a:hover {
     text-decoration: underline;
 }
+
+.subtitle {
+    text-align: center; /* Center the text */
+    font-size: 14px; /* Smaller font size */
+    margin-bottom: 20px; /* Add some space below the subtitle */
+    color: #1db954;
+    font-style: italic;
+
+    
+}
