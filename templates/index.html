@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Mood Playlist Generator</h1>
+    <p class="subtitle">Where Every Mood Finds Its Melody – Discover Your Perfect Playlist</p> 
     <form id="moodForm">
         <label for="moods">Choose a mood:</label>
         <select id="moods" name="moods" required>
@@ -20,10 +21,10 @@
             <option value="euphoric">Euphoric</option>
         </select>
         <label for="numSongs">Number of songs:</label>
-        <input type="number" id="numSongs" name="numSongs" value="10" min="1" max="50" required>
+        <input type="number" id="numSongs" name="numSongs" value="10" min="1" max="100" required>
         <button type="submit">Get Recommendations</button>
     </form>
-    <!-- Loading spinner positioned below the form -->
+
     <div id="loadingSpinner" class="spinner" hidden></div>
     <div id="notifications" style="color: red;"></div> 
     <div id="recommendations"></div>
