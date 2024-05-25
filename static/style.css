@@ -9,7 +9,7 @@ body {
 
 /* Header styles */
 h1 {
-    color: #1db954; /* Spotify's brand color */
+    color: #1db954; 
     text-align: center;
 }
 
@@ -35,7 +35,7 @@ select {
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Makes sure the padding doesn't affect the overall width */
+    box-sizing: border-box; 
 }
 
 button {
@@ -51,15 +51,15 @@ button {
 }
 
 button:hover {
-    background-color: #1a9341; /* A darker green for hover effect */
+    background-color: #1a9341; 
 }
 
-/* Styles for the recommendations display */
+
 #recommendations {
     background-color: white;
-    max-width: 700px; /* Increased width */
+    max-width: 700px; 
     margin: 20px auto;
-    padding: 30px; /* Increased padding */
+    padding: 30px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
 }
