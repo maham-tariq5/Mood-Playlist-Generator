@@ -11,6 +11,7 @@ body {
 h1 {
     color: #fcfcfc; 
     text-align: center;
+    font-size: 60px;
 }
 
 /* Form styling */
@@ -86,7 +87,7 @@ button:hover {
 
 .subtitle {
     text-align: center; /* Center the text */
-    font-size: 14px; /* Smaller font size */
+    font-size: 20px; /* Smaller font size */
     margin-bottom: 20px; /* Add some space below the subtitle */
     color: #1db954;
     font-style: italic;
