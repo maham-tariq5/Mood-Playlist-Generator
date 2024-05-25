@@ -1,7 +1,7 @@
 /* General body styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #e0dedecc;
+    background-color: #000000;
     margin: 0;
     padding: 50px;
     color: #333;
@@ -9,33 +9,33 @@ body {
 
 /* Header styles */
 h1 {
-    color: #1db954; 
+    color: #fcfcfc; 
     text-align: center;
 }
 
 /* Form styling */
 form {
-    background-color: white;
-    max-width: 800px; /* Increased width */
+    background-color: #3b3b3b;
+    max-width: 800px; 
     margin: 40px auto;
-    padding: 80px; /* Increased padding */
+    padding: 80px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
 }
 
 label {
     font-size: 16px;
-    color: #555;
+    color: #fffefe;
 }
 
-select {
+select, input[type="number"] {
     width: 100%;
     padding: 10px;
     margin-top: 15px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 button {
@@ -54,21 +54,31 @@ button:hover {
     background-color: #1a9341; 
 }
 
-
 #recommendations {
-    background-color: white;
+    background-color: #3b3b3b;
     max-width: 700px; 
     margin: 20px auto;
     padding: 30px; 
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(223, 216, 216, 0.1);
     border-radius: 8px;
+    color: #ffffff; 
 }
 
 #recommendations div {
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #fefefe;
+    color: #ffffff;
 }
 
 #recommendations div:last-child {
     border-bottom: none;
+}
+
+#recommendations a {
+    color: #1db954; 
+    text-decoration: none;
+}
+
+#recommendations a:hover {
+    text-decoration: underline;
 }
