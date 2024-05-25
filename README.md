@@ -20,6 +20,7 @@ Backend: Flask (Python)
 APIs: Spotify Web API
 
 # UI
+![Alt text](UI.png)
 
 
 # Running the Application
