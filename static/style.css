@@ -31,12 +31,13 @@ label {
 
 select, input[type="number"] {
     width: 100%;
-    padding: 10px;
+    padding: 15px; /* Increased padding */
     margin-top: 15px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 18px; /* Increased font size */
 }
 
 button {
@@ -91,6 +92,4 @@ button:hover {
     margin-bottom: 20px; /* Add some space below the subtitle */
     color: #1db954;
     font-style: italic;
-
-    
 }
