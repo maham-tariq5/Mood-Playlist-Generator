@@ -19,6 +19,8 @@ Backend: Flask (Python)
 
 APIs: Spotify Web API
 
+# UI
+
 
 # Running the Application
 
