@@ -7,10 +7,19 @@ body {
     color: #333;
 }
 
-/* Header styles */
 h1 {
     color: #fcfcfc; 
     text-align: center;
+    animation: animateTitle 2s linear infinite alternate;
+}
+
+@keyframes animateTitle {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-15px);
+    }
 }
 
 /* Form styling */
