@@ -36,11 +36,13 @@ def callback():
 
 @app.route('/recommendations', methods=['GET'])
 def recommendations():
+    # get request to server to get the user's mood choice
     moods = request.args.get('moods', 'happy, sad, angry, relaxed, energetic, euphoric')
     num_songs = int(request.args.get('numSongs', 10))
     if not moods:
         return jsonify({'error': 'No moods provided'}), 400
 
+    # predefined genres mapped with moods
     mood_genre_map = {
         'happy': 'pop', 'sad': 'r-n-b', 'angry': 'metal',
         'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
@@ -66,12 +68,13 @@ def recommendations():
         'uri': track['uri']
     } for track in tracks]
 
-    # Store only the URIs in the session to avoid large cookie size
+    # Store only the URIs in the session 
     session['recommended_track_uris'] = [track['uri'] for track in tracks]
     return jsonify(track_info)
 
 @app.route('/create_playlist', methods=['POST'])
 def create_playlist():
+    # post request creating playlist from songs recommanded
     mood = request.args.get('mood')
     if not mood:
         return jsonify({'error': 'Mood parameter is missing'}), 400
@@ -94,6 +97,8 @@ def create_playlist():
         return jsonify({'error': str(e)}), 500
 
 def get_recommendations_by_genre(sp, genre, num_songs):
+
+    # Get recommendations from Spotify based on genre
     try:
         results = sp.recommendations(seed_genres=[genre], limit=num_songs)
         return results['tracks'], None
@@ -101,6 +106,7 @@ def get_recommendations_by_genre(sp, genre, num_songs):
         return None, str(e)
 
 def create_spotify_oauth():
+   # Create a SpotifyOAuth object for handling OAuth
     return SpotifyOAuth(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
@@ -111,6 +117,7 @@ def create_spotify_oauth():
     )
 
 def create_spotify_client():
+    # Create a Spotify client using the stored token information
     token_info = session.get('token_info', None)
     if not token_info:
         print("Token info not found in session, redirecting to login.")
