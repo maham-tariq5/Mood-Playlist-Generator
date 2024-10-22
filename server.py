@@ -21,9 +21,10 @@ def index():
 def login():
     # getting user to plug in spotify account credentials
     sp_oauth = create_spotify_oauth() 
-    auth_url = sp_oauth.get_authorize_url()
+    auth_url = sp_oauth.get_authorize_url() # Generates the URL for user authentication on Spotify.
     return redirect(auth_url)
 
+#handling callback after auth
 @app.route('/callback')
 def callback():
     # redirecting back to web page after authentication
@@ -38,7 +39,7 @@ def callback():
 def recommendations():
     # get request to server to get the user's mood choice
     moods = request.args.get('moods', 'happy, sad, angry, relaxed, energetic, euphoric')
-    num_songs = int(request.args.get('numSongs', 10))
+    num_songs = int(request.args.get('numSongs', 10)) 
     if not moods:
         return jsonify({'error': 'No moods provided'}), 400
 
@@ -48,20 +49,20 @@ def recommendations():
         'relaxed': 'indie-pop', 'energetic': 'hip-hop', 'euphoric': 'electronic'
     }
 
-    genre = mood_genre_map.get(moods.strip().lower())
+    genre = mood_genre_map.get(moods.strip().lower()) #looking up genre based on provided mood
     if not genre:
         return jsonify({'error': 'Invalid mood'}), 400
 
-    sp = create_spotify_client()
+    sp = create_spotify_client() # spotify client created if sucessful
     if sp is None:
         return jsonify({'error': 'Authentication required'}), 401
 
-    tracks, error = get_recommendations_by_genre(sp, genre, num_songs)
+    tracks, error = get_recommendations_by_genre(sp, genre, num_songs) # fetching based off genre
     if error:
         return jsonify({'error': error}), 500
 
-    track_info = [{
-        'track': track['name'],
+    track_info = [{  # creates list of dictionaries containing track info
+        'track': track['name'], 
         'artist': track['artists'][0]['name'],
         'album': track['album']['name'],
         'link': track['external_urls']['spotify'],
@@ -75,16 +76,20 @@ def recommendations():
 @app.route('/create_playlist', methods=['POST'])
 def create_playlist():
     # post request creating playlist from songs recommanded
+    
+    #retriving mood parameter from query string of incoming request
     mood = request.args.get('mood')
     if not mood:
         return jsonify({'error': 'Mood parameter is missing'}), 400
 
+    # checks if key exists in user's session if it contains any values
     if 'recommended_track_uris' not in session or not session['recommended_track_uris']:
         return jsonify({'error': 'No track URIs available for playlist creation'}), 400
 
+    # retrieves the list of track URIs that were stored in the session
     track_uris = session['recommended_track_uris']
 
-    sp = create_spotify_client()
+    sp = create_spotify_client() # calling helper function
     if sp is None:
         return jsonify({'error': 'Authentication required'}), 401
 
@@ -96,6 +101,9 @@ def create_playlist():
     except spotipy.exceptions.SpotifyException as e:
         return jsonify({'error': str(e)}), 500
 
+
+
+# helper function
 def get_recommendations_by_genre(sp, genre, num_songs):
 
     # Get recommendations from Spotify based on genre
@@ -105,6 +113,7 @@ def get_recommendations_by_genre(sp, genre, num_songs):
     except spotipy.exceptions.SpotifyException as e:
         return None, str(e)
 
+# helper function
 def create_spotify_oauth():
    # Create a SpotifyOAuth object for handling OAuth
     return SpotifyOAuth(
@@ -116,6 +125,7 @@ def create_spotify_oauth():
         cache_path="token_info"
     )
 
+# helper function
 def create_spotify_client():
     # Create a Spotify client using the stored token information
     token_info = session.get('token_info', None)
